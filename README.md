@@ -12,8 +12,7 @@ wget https://ftp.postgresql.org/pub/repos/yum/reporpms/EL-9-x86_64/pgdg-redhat-r
 wget https://downloadarchive.documentfoundation.org/libreoffice/old/7.4.7.2/rpm/x86_64/LibreOffice_7.4.7.2_Linux_x86-64_rpm.tar.gz
 ```
 
-Pesquisar uma fonte segura ou usar um equivalente.
-msttcore-fonts-2.0-3.noarch.rpm
+Pesquisar uma fonte segura ou usar um equivalente para o <b>msttcore-fonts-2.0-3.noarch.rpm</b>
 
 Diretorio: jod/pacotes
 ```
@@ -21,7 +20,7 @@ wget https://dl.fedoraproject.org/pub/epel/epel-release-latest-9.noarch.rpm
 wget https://ftp.unicamp.br/pub/rocky/9.7/AppStream/x86_64/os/Packages/x/xorg-x11-fonts-75dpi-7.5-33.el9.noarch.rpm
 ```
 
-Este pacote esta dentro do sei-Fontes-5.0.0.zip
-sei/bin/jodconverter-server-4.4.8.jar
+Este pacote esta dentro do sei-Fontes-5.0.0.zip<br>
+<b>sei/bin/jodconverter-server-4.4.8.jar</b>
 
 
