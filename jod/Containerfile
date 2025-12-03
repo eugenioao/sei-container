@@ -1,0 +1,37 @@
+FROM localhost/ubi9/ubi
+
+COPY pacotes/* /tmp
+
+RUN dnf install -y \
+    /tmp/epel-release-latest-9.noarch.rpm \
+    wget \
+    unzip \
+    fontconfig \
+    java-17-openjdk \
+    procps-ng \
+    && dnf clean all
+
+RUN mkdir -p /opt/app && \
+    mv /tmp/jodconverter-4.4.8.jar /opt/app/ && \
+    mv /tmp/application.yaml /opt/app/ && \
+    useradd jod && \
+    chown -R jod.jod /opt/app 
+
+WORKDIR /tmp
+
+RUN tar zxf LibreOffice_7.4.7.2_Linux_x86-64_rpm.tar.gz && \
+    cd LibreOffice_7.4.7.2_Linux_x86-64_rpm/RPMS/ && \
+    rpm -ivh *.rpm && \
+    rm -rf /tmp/LibreOffice_*
+
+WORKDIR /opt/app
+
+COPY bin/entrypoint.sh /opt/scripts/entrypoint.sh
+RUN chmod +x /opt/scripts/entrypoint.sh
+
+EXPOSE 8080
+
+USER jod
+
+ENTRYPOINT ["/opt/scripts/entrypoint.sh"]
+CMD ["/bin/bash"]

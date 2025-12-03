@@ -1,0 +1,100 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: sei-jodconverter-sa
+---
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: sei-jodconverter-rb
+subjects:
+  - kind: ServiceAccount
+    name: sei-jodconverter-sa
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: 'system:openshift:scc:anyuid'
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: sei-jodconverter-service
+spec:
+  type: ClusterIP
+  selector:
+    app: sei-jodconverter
+  ports:
+    - name: http
+      port: 8080
+      protocol: TCP
+      targetPort: 8080
+---
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: sei-jodconverter
+spec:
+  replicas: 0
+  selector:
+    matchLabels:
+      app: sei-jodconverter
+  template:
+    metadata:
+      labels:
+        app: sei-jodconverter
+    spec:
+      serviceAccountName: sei-jodconverter
+      restartPolicy: Always
+      containers:
+        - name: sei-jodconverter
+          image: localhost:jod-converter-2.2.2
+          resources:
+            limits:
+              cpu: "4"
+              memory: 8Gi
+            requests:
+              cpu: 100m
+              memory: 500Mi
+          readinessProbe:
+            initialDelaySeconds: 20
+            exec:
+              command:
+                - 'true'
+          ports:
+            - containerPort: 8080
+              protocol: TCP
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: sei-jodconverter-hpa
+spec:
+  scaleTargetRef:
+      apiVersion: apps/v1
+      kind: Deployment
+      name: sei-jodconverter
+  behavior:
+    scaleDown:
+      policies:
+      - periodSeconds: 60
+        type: Pods
+        value: 1
+      selectPolicy: Max
+      stabilizationWindowSeconds: 30
+    scaleUp:
+      policies:
+      - periodSeconds: 60
+        type: Pods
+        value: 2
+      selectPolicy: Max
+      stabilizationWindowSeconds: 30
+  maxReplicas: 10
+  metrics:
+  - resource:
+      name: cpu
+      target:
+        averageUtilization: 70
+        type: Utilization
+    type: Resource
+  minReplicas: 1
+

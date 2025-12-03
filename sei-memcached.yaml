@@ -1,0 +1,63 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: sei-memcached-sa
+---
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: sei-memcached-rb
+subjects:
+  - kind: ServiceAccount
+    name: sei-memcached-sa
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: 'system:openshift:scc:anyuid'
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: sei-memcached-service
+spec:
+  type: ClusterIP
+  selector:
+    app: sei-memcached
+  ports:
+    - name: http
+      port: 11211
+      protocol: TCP
+      targetPort: 11211
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: sei-memcached-configmap
+data:
+  PARAMETROS: "-m 512 -p 11211 -c 2048 -t 4"
+---
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: sei-memcached
+spec:
+  replicas: 0
+  selector:
+    matchLabels:
+      app: sei-memcached
+  template:
+    metadata:
+      labels:
+        app: sei-memcached
+    spec:
+      serviceAccountName: seip-memcached-sa
+      restartPolicy: Always
+      containers:
+        - name: sei-memcached
+          image: registry.redhat.io/rhel9/memcached:latest
+          ports:
+            - containerPort: 11211
+              protocol: TCP
+          envFrom:
+            - configMapRef:
+                name: sei-memcached-configmap

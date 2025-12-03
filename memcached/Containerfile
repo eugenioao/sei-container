@@ -1,0 +1,17 @@
+FROM localhost/ubi9/ubi
+
+RUN dnf install -y memcached procps-ng \
+    && dnf clean all
+
+RUN mkdir -p /etc/memcached
+
+WORKDIR /opt/
+
+COPY bin/entrypoint.sh /opt/scripts/entrypoint.sh
+RUN chmod +x /opt/scripts/entrypoint.sh
+
+EXPOSE 11211
+
+USER memcached
+
+ENTRYPOINT ["/opt/scripts/entrypoint.sh"]
