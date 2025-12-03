@@ -14,7 +14,7 @@ wget https://downloadarchive.documentfoundation.org/libreoffice/old/7.4.7.2/rpm/
 
 Pesquisar uma fonte segura ou usar um equivalente para o <b>msttcore-fonts-2.0-3.noarch.rpm</b>
 
-Diretorio: jod/pacotes
+Diretório: jod/pacotes
 ```
 wget https://dl.fedoraproject.org/pub/epel/epel-release-latest-9.noarch.rpm
 wget https://ftp.unicamp.br/pub/rocky/9.7/AppStream/x86_64/os/Packages/x/xorg-x11-fonts-75dpi-7.5-33.el9.noarch.rpm
