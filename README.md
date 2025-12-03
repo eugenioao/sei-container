@@ -23,4 +23,21 @@ wget https://ftp.unicamp.br/pub/rocky/9.7/AppStream/x86_64/os/Packages/x/xorg-x1
 Este pacote esta dentro do sei-Fontes-5.0.0.zip<br>
 <b>sei/bin/jodconverter-server-4.4.8.jar</b>
 
+## Ajustes SEI específicos (relevante para PostgreSQL)
+
+No ConfiguracaoSEI.php:
+
+### Habilitar cache APCu
+```
+define('SEI_CACHE_EXTERNO','APCU');
+```
+
+E no php.ini:
+
+```ini
+apc.enabled=1
+apc.shm_size=256M
+apc.ttl=3600
+apc.enable_cli=0
+```
 
