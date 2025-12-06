@@ -94,4 +94,4 @@ ln -s /dev/stderr /var/log/httpd/error_log
  
 # Limpando caches do DNF
 dnf clean all
-rm -rf /var/cache/dnf/* /tmp/*
+rm -rf /var/cache/dnf/*

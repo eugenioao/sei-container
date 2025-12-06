@@ -21,20 +21,16 @@ RUN sed -i -e 's/AllowOverride None/AllowOverride All/g' \
     mv /etc/httpd/conf.d/ssl.conf /etc/httpd/conf.d/ssl.conf-disabilitado && \
     rm -vf /etc/httpd/conf.d/README /etc/httpd/conf.d/userdir.conf /etc/httpd/conf.d/welcome.conf
  
-RUN mkdir -p /opt/tmp /mnt/sei/arquivos && \
-    chown -R apache:apache /mnt/sei/arquivos && \
-    chmod 2775 /mnt/sei/arquivos && \
-    mkdir -p /var/log/sei /var/log/sip /run/php-fpm && \
-    chown -R apache:apache /run/php-fpm
-
 COPY configuracoes/99-tuning.conf /etc/sysctl.d/
 COPY configuracoes/99-apache.conf /etc/security/limits.d/
 COPY configuracoes/sei.conf /etc/httpd/conf.d/
 COPY configuracoes/cron.conf /opt/tmp
 COPY fontes/* /opt/
 COPY bin/entrypoint.sh /opt/scripts/
+COPY bin/configura-env.sh /tmp/
 
-RUN chmod +x /opt/scripts/entrypoint.sh
+RUN chmod +x /tmp/configura-env.sh && \
+    /tmp/configura-env.sh
 
 USER apache
 
